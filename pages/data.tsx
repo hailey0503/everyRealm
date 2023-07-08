@@ -5,8 +5,7 @@ import Toast from "@/components/toast";
 import Card from "@/components/card"
 import Modal from "@/components/modal"
 import LoadingSpinner from "@/components/loadingSpinner"
-import Form from "@/components/form"
-import { Container } from "postcss";
+
 
 
 export default function Data() {
@@ -24,26 +23,37 @@ export default function Data() {
 		id: number;
 		name: string;
 		description: string;
+		imageSrc: string;
 	}
 
 	const [formData, setFormData] = useState<FormData>({
 		id: 0,
 		name: '',
 		description: '',
+		imageSrc: ''
 	});
 
 	const [showModal, setShowModal] = useState(false)
+	const [showUpdateModal, setShowUpdateModal] = useState(false)
 	const [showAddedToast, setAddedToast] = useState(false)
 	const [showRemoveToast, setRemoveToast] = useState(false)
 	const [showCancelToast, setCancelToast] = useState(false)
 	const [showUpdateToast, setUpdateToast] = useState(false)
 	const [showSpinner, setShowSpinner] = useState(false)
 	const [isVisible, setIsVisible] = useState(false);
+	const [curId, setCurID] = useState(0)
 
 
 
 	useEffect(() => {
-		getProduct();
+		async function fetchProduct() {
+			setShowSpinner(true);
+			await getProduct();
+			setShowSpinner(false);
+
+		}
+		fetchProduct();
+
 	}, [getProduct]);
 
 	const handleAddProduct = (event: FormEvent) => {
@@ -53,11 +63,14 @@ export default function Data() {
 			id: formData.id, // You can use a more sophisticated ID generation logic
 			name: formData.name,
 			description: formData.description,
+			imageSrc: formData.imageSrc
 		};
 		addProduct(newProduct);
 		setShowModal(false);
+		resetFormData();
 		onClickShowAddToast();
-		//setShowSpinner(true);
+
+
 	};
 
 	const handleChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -80,18 +93,26 @@ export default function Data() {
 		setShowModal(false);
 		setCancelToast(true);
 	};
-
+	const handleCancelUpdate = () => {
+		setShowUpdateModal(false);
+		setCancelToast(true);
+	}
 
 	const handleRemoveProduct = (id: number) => {
 		removeProduct(id);
 		setRemoveToast(true)
 	};
 
-	const handleUpdateProduct = (id: number) => {
+	const handleUpdateProduct = (event: FormEvent) => {
+		console.log('fd', formData)
 		const updatedProduct = {
-			name: 'Updated Product',
+			name: formData.name,
+			description: formData.description,
+			imageSrc: formData.imageSrc
 		};
-		updateProduct(id, updatedProduct);
+		updateProduct(curId, updatedProduct);
+		setShowUpdateModal(false);
+		resetFormData();
 		setUpdateToast(true)
 	};
 
@@ -99,24 +120,36 @@ export default function Data() {
 		setIsVisible(!isVisible);
 	};
 
+	const resetFormData = () => {
+		setFormData({
+			id: 0,
+			name: '',
+			description: '',
+			imageSrc: ''
+		})
+
+
+	}
+
 	return (
 		<main className="main">
+			{showSpinner ? <LoadingSpinner /> : <></>}
 			<div className="product">
 				<div className="min-w-full">
 					<div className="addForm">
-						<Modal isOpen={showModal} onClose={() => { setShowModal(false) }} >
-							<div className="flex flex-col h-full bg-[#CCD5AE] pd-30">
-								<div className="mb-4  bg-[#CCD5AE]">
+						<Modal isOpen={showModal} onClose={() => { setShowModal(false); resetFormData() }} >
+							<div className="flex flex-col h-full bg-[##BDCDD6] pd-30">
+								<div className="mb-4 bg-[#BDCDD6]">
 									<label htmlFor="id" className="text-right w-1/4 text-[#6096B4]">
 										ID:
 									</label>
 									<input
-										type="text"
+										type="number"
 										id="id"
 										name="id"
 										value={formData.id}
 										onChange={handleChange}
-										className="border rounded px-2 py-1 w-3/4 float-right bg-[#CCD5AE]"
+										className="border rounded px-2 py-1 w-3/4 float-right bg-[#BDCDD6] focus:outline-none focus:border-[#6096B4]"
 									/>
 								</div>
 								<div className="mb-4">
@@ -129,7 +162,21 @@ export default function Data() {
 										name="name"
 										value={formData.name}
 										onChange={handleChange}
-										className="border rounded px-2 py-1 w-3/4 float-right  bg-[#CCD5AE]"
+										className="border rounded px-2 py-1 w-3/4 float-right  bg-[#BDCDD6] focus:outline-none focus:border-[#6096B4]"
+									/>
+								</div>
+
+								<div className="mb-4 bg-[#BDCDD6]">
+									<label htmlFor="id" className="text-right w-1/4 text-[#6096B4]">
+										ImageURL:
+									</label>
+									<input
+										type="text"
+										id="imageSrc"
+										name="imageSrc"
+										value={formData.imageSrc}
+										onChange={handleChange}
+										className="border rounded px-2 py-1 w-3/4 float-right bg-[#BDCDD6] focus:outline-none focus:border-[#6096B4]"
 									/>
 								</div>
 
@@ -142,7 +189,7 @@ export default function Data() {
 										name="description"
 										value={formData.description}
 										onChange={handleChange}
-										className="border rounded px-2 py-1 w-3/4 float-right  bg-[#CCD5AE]"
+										className="border rounded px-2 py-1 w-3/4 float-right h-32 bg-[#BDCDD6] focus:outline-none focus:border-[#6096B4]"
 									/>
 								</div>
 								<div className="mt-auto flex justify-end flex space-x-2">
@@ -155,48 +202,105 @@ export default function Data() {
 								</div>
 							</div>
 						</Modal>
-						<div className="container mx-auto"><button className="bg-transparent hover:bg-[#6096B4] text-[#6096B4] font-semibold hover:text-white py-2 px-4 border border-[#6096B4] hover:border-transparent rounded" onClick={onClickShowModal}>Add Product</button></div>
+						<div className="container mx-auto"><button className="bg-transparent hover:bg-[#6096B4] text-[#6096B4] font-semibold hover:text-white py-2 px-4 border border-[#6096B4] hover:border-transparent rounded mb-16" onClick={onClickShowModal}>Add Product</button></div>
 
 					</div>
 				</div>
 				<div>
 					{showAddedToast ? <Toast message="Item is successfully added" level="Success" onClose={() => { setAddedToast(false) }} /> : <></>}
 					{showCancelToast ? <Toast message="Cancelled" level="Warning" onClose={() => { setCancelToast(false) }} /> : <></>}
-					{showSpinner ? <LoadingSpinner /> : <></>}
+
 				</div>
-				<div className="flex flex-wrap">
-					<ul className="productList">
+				<div >
+					<div>
+						<Modal isOpen={showUpdateModal} onClose={() => { setShowUpdateModal(false); resetFormData() }} >
+							<div className="flex flex-col h-full bg-[##BDCDD6] pd-30">
+								<div className="mb-4 bg-[#BDCDD6]">
+									<label htmlFor="id" className="text-right w-1/4 text-[#6096B4]">
+										ID:
+									</label>
+									<input
+										readOnly
+										type="number"
+										id="id"
+										name="id"
+										value={curId}
+										onChange={handleChange}
+										className="border rounded px-2 py-1 w-3/4 float-right bg-[#BDCDD6] focus:outline-none focus:border-[#6096B4]"
+									/>
+								</div>
+								<div className="mb-4">
+									<label htmlFor="name" className="text-right w-1/4 text-[#6096B4]">
+										Name:
+									</label>
+									<input
+										type="text"
+										id="name"
+										name="name"
+										value={formData.name}
+										onChange={handleChange}
+										className="border rounded px-2 py-1 w-3/4 float-right  bg-[#BDCDD6] focus:outline-none focus:border-[#6096B4]"
+									/>
+								</div>
+
+								<div className="mb-4 bg-[#BDCDD6]">
+									<label htmlFor="id" className="text-right w-1/4 text-[#6096B4]">
+										ImageURL:
+									</label>
+									<input
+										type="text"
+										id="imageSrc"
+										name="imageSrc"
+										value={formData.imageSrc}
+										onChange={handleChange}
+										className="border rounded px-2 py-1 w-3/4 float-right bg-[#BDCDD6] focus:outline-none focus:border-[#6096B4]"
+									/>
+								</div>
+
+								<div className="mb-4">
+									<label htmlFor="description" className="text-right w-1/4 text-[#6096B4]">
+										Description:
+									</label>
+									<textarea
+										id="description"
+										name="description"
+										value={formData.description}
+										onChange={handleChange}
+										className="border rounded px-2 py-1 w-3/4 float-right h-32 bg-[#BDCDD6] focus:outline-none focus:border-[#6096B4]"
+									/>
+								</div>
+								<div className="mt-auto flex justify-end flex space-x-2">
+									<button className="bg-transparent hover:bg-[#6096B4] text-[#6096B4] font-semibold hover:text-white py-2 px-4 border border-[#6096B4] hover:border-transparent rounded" onClick={handleCancelUpdate}>
+										Cancel
+									</button>
+									<button className="bg-transparent hover:bg-[#6096B4] text-[#6096B4] font-semibold hover:text-white py-2 px-4 border border-[#6096B4] hover:border-transparent rounded" onClick={handleUpdateProduct}>
+										Update
+									</button>
+								</div>
+							</div>
+						</Modal>
+					</div>
+
+					<div className="grid grid-cols-3 gap-10 place-content-center">
 						{products.map((product) => (
 							<div key={product.id}>
-								<div className="flex flex-col space-y-4">
-									<a
-										href="#!"
-										py-10
-										onClick={handleLinkClick}
-										className="text-[#6096B4] transition duration-150 ease-in-out hover:text-primary-600 focus:text-[#BDCDD6] active:text-primary-700 dark:active:text-primary-600 pt-5 pb-2"
-									>{product.name}</a>
-								</div>
 
 
+								<Card
+									imageSrc={product.imageSrc}
+									name={product.name}
+									description={product.description}
+									handleUpdate={() => { setShowUpdateModal(true); setCurID(product.id) }}
+									handleRemove={() => { handleRemoveProduct(product.id) }}
 
-								<div className="flex space-x-2">
-									<button className="bg-transparent hover:bg-[#6096B4] text-[#6096B4] font-semibold hover:text-white py-2 px-4 border border-[#6096B4] hover:border-transparent rounded" onClick={() => handleRemoveProduct(product.id)}>Remove</button>
-									<button className="bg-transparent hover:bg-[#6096B4] text-[#6096B4] font-semibold hover:text-white py-2 px-4 border border-[#6096B4] hover:border-transparent rounded" onClick={() => handleUpdateProduct(product.id)}>Update</button>
-								</div>
-								<div className={`card ${isVisible ?
-									<Card
-										id={product.id}
-										name={product.name}
-										description={product.description}
-									/> : ''}`}>
+								/>
 
-								</div>
 
 
 
 							</div>
 						))}
-					</ul>
+					</div>
 					{showRemoveToast ? <Toast message="Item is successfully removed" level="Error" onClose={() => { setRemoveToast(false) }} /> : <></>}
 					{showUpdateToast ? <Toast message="Item is successfully updated" level="Info" onClose={() => { setUpdateToast(false) }} /> : <></>}
 				</div>
