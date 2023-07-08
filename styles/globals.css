@@ -1,6 +1,6 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
 
 :root {
   --foreground-rgb: 0, 0, 0;
@@ -21,7 +21,49 @@ body {
   background: linear-gradient(
       to bottom,
       transparent,
-      rgb(var(--background-end-rgb))
+      #EEE9DA
     )
-    rgb(var(--background-start-rgb));
+    #EEE9DA;
+}
+.main {
+  padding: 5rem
+}
+.helloWorld {
+  color: teal;
+  font-size: 30px;
+  padding-bottom: 2rem
+}
+
+.dataTitle {
+  color: teal;
+  font-size: 40px;
+  padding-bottom: 2rem
+}
+.productName {
+  padding: 5px;
+  font-size: 20px;
+}
+.productDescription {
+  padding: 5px;
+}
+
+.productList {
+  padding: 5px;
+  border-radius: 12px;
+  }
+.productButton {
+  background-color: teal;
+  padding: 5px;
+  border-radius: 12px;
+  margin: 4px 4px;
+}
+.addForm {
+  color: #6096B4;
+}
+.card {
+  transition: transform 0.3s ease;
+}
+
+.slide-out {
+  transform: translateY(-100%);
 }
