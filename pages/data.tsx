@@ -42,6 +42,9 @@ export default function Data() {
 	const [showSpinner, setShowSpinner] = useState(false)
 	const [isVisible, setIsVisible] = useState(false);
 	const [curId, setCurID] = useState(0)
+	const [curName, setCurName] = useState('')
+	const [curUrl, setCurUrl] = useState('')
+	const [curDescription, setCurDescription] = useState('')
 
 
 
@@ -59,7 +62,6 @@ export default function Data() {
 	const handleAddProduct = (event: FormEvent) => {
 		event.preventDefault();
 		const newProduct = {
-
 			id: formData.id, // You can use a more sophisticated ID generation logic
 			name: formData.name,
 			description: formData.description,
@@ -104,11 +106,12 @@ export default function Data() {
 	};
 
 	const handleUpdateProduct = (event: FormEvent) => {
-		console.log('fd', formData)
+		console.log('fd',formData)
 		const updatedProduct = {
-			name: formData.name,
-			description: formData.description,
-			imageSrc: formData.imageSrc
+			name: formData.name? formData.name: curName,
+			imageSrc: formData.imageSrc? formData.imageSrc: curUrl,
+			description: formData.description? formData.description: curDescription,
+			
 		};
 		updateProduct(curId, updatedProduct);
 		setShowUpdateModal(false);
@@ -138,8 +141,8 @@ export default function Data() {
 				<div className="min-w-full">
 					<div className="addForm">
 						<Modal isOpen={showModal} onClose={() => { setShowModal(false); resetFormData() }} >
-							<div className="flex flex-col h-full bg-[##BDCDD6] pd-30">
-								<div className="mb-4 bg-[#BDCDD6]">
+							<div className="flex flex-col h-full bg-[white] pd-30">
+								<div className="mb-4 bg-[white]">
 									<label htmlFor="id" className="text-right w-1/4 text-[#6096B4]">
 										ID:
 									</label>
@@ -149,7 +152,7 @@ export default function Data() {
 										name="id"
 										value={formData.id}
 										onChange={handleChange}
-										className="border rounded px-2 py-1 w-3/4 float-right bg-[#BDCDD6] focus:outline-none focus:border-[#6096B4]"
+										className="border rounded px-2 py-1 w-3/4 float-right bg-[white] focus:outline-none focus:border-[#6096B4]"
 									/>
 								</div>
 								<div className="mb-4">
@@ -162,11 +165,11 @@ export default function Data() {
 										name="name"
 										value={formData.name}
 										onChange={handleChange}
-										className="border rounded px-2 py-1 w-3/4 float-right  bg-[#BDCDD6] focus:outline-none focus:border-[#6096B4]"
+										className="border rounded px-2 py-1 w-3/4 float-right bg-[white] focus:outline-none focus:border-[#6096B4]"
 									/>
 								</div>
 
-								<div className="mb-4 bg-[#BDCDD6]">
+								<div className="mb-4 bg-[white]">
 									<label htmlFor="id" className="text-right w-1/4 text-[#6096B4]">
 										ImageURL:
 									</label>
@@ -176,7 +179,7 @@ export default function Data() {
 										name="imageSrc"
 										value={formData.imageSrc}
 										onChange={handleChange}
-										className="border rounded px-2 py-1 w-3/4 float-right bg-[#BDCDD6] focus:outline-none focus:border-[#6096B4]"
+										className="border rounded px-2 py-1 w-3/4 float-right bg-[white] focus:outline-none focus:border-[#6096B4]"
 									/>
 								</div>
 
@@ -189,7 +192,7 @@ export default function Data() {
 										name="description"
 										value={formData.description}
 										onChange={handleChange}
-										className="border rounded px-2 py-1 w-3/4 float-right h-32 bg-[#BDCDD6] focus:outline-none focus:border-[#6096B4]"
+										className="border rounded px-2 py-1 w-3/4 float-right h-32 bg-[white] focus:outline-none focus:border-[#6096B4]"
 									/>
 								</div>
 								<div className="mt-auto flex justify-end flex space-x-2">
@@ -214,8 +217,8 @@ export default function Data() {
 				<div >
 					<div>
 						<Modal isOpen={showUpdateModal} onClose={() => { setShowUpdateModal(false); resetFormData() }} >
-							<div className="flex flex-col h-full bg-[##BDCDD6] pd-30">
-								<div className="mb-4 bg-[#BDCDD6]">
+							<div className="flex flex-col h-full bg-[white] pd-30">
+								<div className="mb-4 bg-[white]">
 									<label htmlFor="id" className="text-right w-1/4 text-[#6096B4]">
 										ID:
 									</label>
@@ -224,9 +227,9 @@ export default function Data() {
 										type="number"
 										id="id"
 										name="id"
-										value={curId}
+										placeholder={String(curId)}
 										onChange={handleChange}
-										className="border rounded px-2 py-1 w-3/4 float-right bg-[#BDCDD6] focus:outline-none focus:border-[#6096B4]"
+										className="border rounded px-2 py-1 w-3/4 float-right bg-[white] focus:outline-none focus:border-[#6096B4]"
 									/>
 								</div>
 								<div className="mb-4">
@@ -237,13 +240,14 @@ export default function Data() {
 										type="text"
 										id="name"
 										name="name"
+										placeholder={curName}
 										value={formData.name}
 										onChange={handleChange}
-										className="border rounded px-2 py-1 w-3/4 float-right  bg-[#BDCDD6] focus:outline-none focus:border-[#6096B4]"
+										className="border rounded px-2 py-1 w-3/4 float-right bg-[white] text-[#6096B4] focus:outline-none focus:border-[#6096B4]"
 									/>
 								</div>
 
-								<div className="mb-4 bg-[#BDCDD6]">
+								<div className="mb-4 bg-[white]">
 									<label htmlFor="id" className="text-right w-1/4 text-[#6096B4]">
 										ImageURL:
 									</label>
@@ -251,9 +255,10 @@ export default function Data() {
 										type="text"
 										id="imageSrc"
 										name="imageSrc"
+										placeholder={curUrl}
 										value={formData.imageSrc}
 										onChange={handleChange}
-										className="border rounded px-2 py-1 w-3/4 float-right bg-[#BDCDD6] focus:outline-none focus:border-[#6096B4]"
+										className="border rounded px-2 py-1 w-3/4 float-right bg-[white] text-[#6096B4] focus:outline-none focus:border-[#6096B4]"
 									/>
 								</div>
 
@@ -262,11 +267,13 @@ export default function Data() {
 										Description:
 									</label>
 									<textarea
+										
 										id="description"
 										name="description"
+										placeholder={curDescription}
 										value={formData.description}
 										onChange={handleChange}
-										className="border rounded px-2 py-1 w-3/4 float-right h-32 bg-[#BDCDD6] focus:outline-none focus:border-[#6096B4]"
+										className="border rounded px-2 py-1 w-3/4 float-right h-32 bg-[white] text-[#6096B4] focus:outline-none focus:border-[#6096B4]"
 									/>
 								</div>
 								<div className="mt-auto flex justify-end flex space-x-2">
@@ -290,7 +297,7 @@ export default function Data() {
 									imageSrc={product.imageSrc}
 									name={product.name}
 									description={product.description}
-									handleUpdate={() => { setShowUpdateModal(true); setCurID(product.id) }}
+									handleUpdate={() => { setShowUpdateModal(true); setCurID(product.id); setCurName(product.name); setCurUrl(product.imageSrc); setCurDescription(product.description) }}
 									handleRemove={() => { handleRemoveProduct(product.id) }}
 
 								/>
