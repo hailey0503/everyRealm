@@ -293,14 +293,23 @@ export default function Data() {
 							<div key={product.id}>
 
 
-								<Card
-									imageSrc={product.imageSrc}
-									name={product.name}
-									description={product.description}
-									handleUpdate={() => { setShowUpdateModal(true); setCurID(product.id); setCurName(product.name); setCurUrl(product.imageSrc); setCurDescription(product.description) }}
-									handleRemove={() => { handleRemoveProduct(product.id) }}
+								<Card>
 
-								/>
+									<div>
+										<img src={product.imageSrc} alt={product.name} className="w-full h-40 object-cover mb-4" />
+										<p className="mb-4 text-base  text-[#6096B4] h-9">
+											{product.name}
+										</p>
+										<p className="mb-4 text-base text-[#6096B4] h-9">
+											{product.description}
+										</p>
+										<div className="space-x-2 mb-4 mt-6">
+											<button className="hover:bg-transparent bg-[#6096B4] hover:text-[#6096B4] font-semibold text-[#BDCDD6] py-2 px-4 border hover:border-[#6096B4] border-transparent rounded" onClick={() => { handleRemoveProduct(product.id) }}>Remove</button>
+											<button className="hover:bg-transparent bg-[#6096B4] hover:text-[#6096B4] font-semibold text-[#BDCDD6] py-2 px-4 border hover:border-[#6096B4] border-transparent rounded" onClick={() => { setShowUpdateModal(true); setCurID(product.id); setCurName(product.name); setCurUrl(product.imageSrc); setCurDescription(product.description) }}>Update</button>
+
+										</div>
+									</div>
+								</Card>
 
 
 
