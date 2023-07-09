@@ -106,12 +106,12 @@ export default function Data() {
 	};
 
 	const handleUpdateProduct = (event: FormEvent) => {
-		console.log('fd',formData)
+		console.log('fd', formData)
 		const updatedProduct = {
-			name: formData.name? formData.name: curName,
-			imageSrc: formData.imageSrc? formData.imageSrc: curUrl,
-			description: formData.description? formData.description: curDescription,
-			
+			name: formData.name ? formData.name : curName,
+			imageSrc: formData.imageSrc ? formData.imageSrc : curUrl,
+			description: formData.description ? formData.description : curDescription,
+
 		};
 		updateProduct(curId, updatedProduct);
 		setShowUpdateModal(false);
@@ -267,7 +267,7 @@ export default function Data() {
 										Description:
 									</label>
 									<textarea
-										
+
 										id="description"
 										name="description"
 										placeholder={curDescription}
