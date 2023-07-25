@@ -2,6 +2,17 @@
 
 Project description.
 
+Welcome to our Fetch & Display project! This application is designed to fetch data from a backend server and display it in a visually pleasing and user-friendly manner.
+
+Features:
+Data Fetching: Seamlessly fetch data from our backend server to provide you with real-time and up-to-date information.
+
+Data Display: Experience a beautifully designed interface that presents the fetched data in an organized and aesthetically pleasing manner.
+
+Add, Update, Delete: Interact with the app effortlessly, as you can add new items, update existing ones, and even remove items with ease.
+
+Soft Color Palette: Enjoy a soothing and delightful visual experience, thanks to our carefully curated soft color palette that enhances the overall ambiance of the web app.
+
 ## Table of Contents
 
 - [Project Overview](#project-overview)
